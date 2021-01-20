@@ -13,7 +13,7 @@ BRAVE_PARAMS = { name: "トンヌラ", hp: 230, offense: 170, defense: 180 }
 
 # 対戦表を生成
 battle_table = { player: Brave.new(BRAVE_PARAMS),
-                 monster: Monster.new(MONSTER_LIST[3]) }
+                 monster: Monster.new(MONSTER_LIST.sample) }
 
 # バトル開始 
 battle = Battle.new(battle_table)
