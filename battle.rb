@@ -5,9 +5,10 @@ class Battle
   end
 
   def start_battle
-    puts "#{@monster.name}が現れた！"
+    puts "#{@monster.name} が現れた！"
+    sleep 1
     while true
-      p "test"
+      @player.attack @monster
       break
     end
   end

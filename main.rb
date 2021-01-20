@@ -12,7 +12,7 @@ BRAVE_PARAMS = { name: "abc", hp: 238, offense: 203, defense: 129 }
 
 # c生成
 bt_chars = { pl: Brave.new(BRAVE_PARAMS),
-             ms: Monster.new(MONSTER_LIST.sample) }
+             ms: Monster.new(MONSTER_LIST[0]) }
 # bt
 bt = Battle.new(bt_chars)
 bt.start_battle
