@@ -8,4 +8,13 @@ class Character
     @offense = params[:offense]
     @defense = params[:defense]
   end
+
+  def attack(target_defense)
+    # ダメージ計算
+    dice = rand(3)
+    damage = [@offense + dice - target_defense / 2, 0].max
+    # ダメージが0でも1/3の確率で1与える
+    damage = 1 if damage == 0 and dice == 0
+    damage
+  end
 end

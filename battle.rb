@@ -1,9 +1,6 @@
 class Battle
-  @@phase = 0
-
-  def initialize(battle_table)
-    @characters = [battle_table[:player], battle_table[:monster]]
-    @member = @characters.size
+  def initialize(battle_member)
+    @battle_member = battle_member
   end
 
   def start
@@ -50,3 +47,12 @@ class Battle
     puts
   end
 end
+
+=begin
+# メッセージ処理
+    messages = ["#{@name} の攻撃！", "#{target.name} に"]
+    messages[-1] += damage > 0 ? " #{damage} のダメージを与えた！" : "ダメージを与えられなかった！"
+    messages.each do |message|
+      puts message
+      sleep 0.5
+=end
