@@ -15,7 +15,7 @@ class Monster < Character
     messages[-1] += damage > 0 ? " #{damage} のダメージを受けた！" : "ひらりと身をかわした！"
     messages.each do |message|
       puts message
-      sleep 1
+      sleep 0.5
     end
   end
 end

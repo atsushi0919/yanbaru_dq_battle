@@ -24,6 +24,7 @@ class Battle
           puts "【#{character.name}】HP: #{character.hp}"
         end
         puts line
+        sleep 0.5
       end
 
       # ターゲットがノックダウンならバトルを終了してループを抜ける
