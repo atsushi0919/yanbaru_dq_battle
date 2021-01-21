@@ -1,6 +1,12 @@
 class Battle
   def initialize(battle_member)
     @battle_member = battle_member
+    # 味方データ
+    @ally_leader = battle_member.find {|member| member.ally}.name
+    @ally_count = battle_member.select { |member| member.ally }.size
+    # 敵データ
+    @enemy_leader = battle_member.find {|member| !member.ally}.name
+    @enemy_count = battle_member.select { |member| !member.ally }.size 
   end
 
   def start

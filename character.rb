@@ -1,5 +1,5 @@
 class Character
-  attr_accessor :hp
+  attr_accessor :hp, :ally
   attr_reader :name, :offense, :defense
 
   def initialize(params)
@@ -7,6 +7,7 @@ class Character
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
+    @ally = true
   end
 
   def attack(target_defense)
