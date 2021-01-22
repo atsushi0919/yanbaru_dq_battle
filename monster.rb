@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require "./character"
 
 class Monster < Character

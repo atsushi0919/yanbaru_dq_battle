@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Character
   attr_accessor :hp, :ally
   attr_reader :name, :offense, :defense
