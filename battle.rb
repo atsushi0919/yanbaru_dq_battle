@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Battle
   MESSAGE_SPEED = 0.5
   PARTITION = "*" + "=*" * 14
@@ -5,10 +7,10 @@ class Battle
   def initialize(battle_members)
     # バトルメンバー
     @battle_members = battle_members
-    # 仲間の情報: リーダー名, 人数
+    # 友軍情報: リーダー名, 人数
     @allies_leader = battle_members.find { |member| member.ally }.name
     @allies_count = battle_members.count { |member| member.ally }
-    # 敵の情報: リーダー名, 人数
+    # 敵軍情報: リーダー名, 人数
     @enemies_leader = battle_members.find { |member| !member.ally }.name
     @enemies_count = battle_members.count { |member| !member.ally }
   end
@@ -16,7 +18,9 @@ class Battle
   # 1サイクル進める
   def forward_turn
     @battle_members.each do |attacker|
-      next if attacker.dead?
+      # アタッカーが戦闘不能なら順番を飛ばす
+      next unless attacker.alive?
+      target = select_target(attacker)
     end
   end
 
@@ -32,19 +36,24 @@ class Battle
 
   private
 
-  # 死んでいるか？
-  def dead?(member)
-    member.hp == 0 ? true : false
+  # 敵軍チームからターゲットを選択する
+  def select_target(attacker)
+    target_team = ""
   end
 
-  # 仲間リストを返す
-  def get_allies
-    @battle_members.select { |member| member.ally }
+  # 生きているか？
+  def alive?(member)
+    member.hp > 0 ? true : false
   end
 
-  # 敵リストを返す
-  def get_enemies
-    @battle_members.select { |member| !member.ally }
+  # メンバーリストを返す
+  # ally: 友軍or敵軍, only_alive: 全員or生存者
+  def get_member(ally, only_alive = false)
+    if only_alive
+      @battle_members.select { |member| member.ally == ally && member.alive? }
+    else
+      @battle_members.select { |member| member.ally == ally }
+    end
   end
 
   # 開始メッセージを表示
