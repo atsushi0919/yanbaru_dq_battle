@@ -1,6 +1,6 @@
 class Battle
   MESSAGE_SPEED = 0.5
-  MESSAGE_LINE = "*" + "=*" * 14
+  PARTITION = "*" + "=*" * 14
 
   def initialize(battle_members)
     # バトルメンバー
@@ -13,16 +13,29 @@ class Battle
     @enemies_count = battle_members.count { |member| !member.ally }
   end
 
-  # バトルメンバーのステータスを表示
-  def show_members_hp
-    puts MESSAGE_LINE
+  # 1サイクル進める
+  def forward_turn
+    @battle_members.each do |attacker|
+      next if attacker.dead?
+    end
+  end
+
+  def
+ # 全員のステータスを表示
+    def(show_members_hp)
+    puts PARTITION
     (get_allies + get_enemies).each do |member|
       puts "【#{member.name}】HP: #{member.hp}"
     end
-    puts MESSAGE_LINE
+    puts PARTITION
   end
 
   private
+
+  # 死んでいるか？
+  def dead?(member)
+    member.hp == 0 ? true : false
+  end
 
   # 仲間リストを返す
   def get_allies

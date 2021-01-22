@@ -14,12 +14,9 @@ BRAVE = { name: "トンヌラ", hp: 230, offense: 170, defense: 180 }
 
 # 対戦メンバーを生成 (配列の先頭から順に攻撃する)
 battle_members = [Brave.new(BRAVE),
-                  Monster.new(MONSTER_LIST.sample),
                   Monster.new(MONSTER_LIST.sample)]
 
 # バトル開始
 battle = Battle.new(battle_members)
 
 p battle
-
-#battle.start
