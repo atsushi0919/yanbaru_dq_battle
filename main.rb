@@ -12,13 +12,17 @@ MONSTER_LIST = [{ name: "メタルスライム", hp: 3, offense: 100, defense: 9
                 { name: "りゅうおう", hp: 228, offense: 170, defense: 190 },
                 { name: "シドー", hp: 240, offense: 165, defense: 220 },
                 { name: "ゾーマ", hp: 250, offense: 175, defense: 245 }]
-BRAVE = { name: "トンヌラ", hp: 230, offense: 170, defense: 180 }
+BRAVE_LIST = [{ name: "もょもと", hp: 230, offense: 170, defense: 180 },
+              { name: "トンヌラ", hp: 210, offense: 150, defense: 150 },
+              { name: "プリン", hp: 202, offense: 125, defense: 140 }]
 
-# 対戦メンバーを生成 (配列の先頭から順に攻撃する)
-battle_members = [Brave.new(BRAVE),
-                  Monster.new(MONSTER_LIST.sample)]
+# 対戦メンバーを生成 (brave_teamから攻撃する)
+brave_count = 3
+monster_count = 2
+brave_team = BRAVE_LIST.sample(brave_count).map { |brave| Brave.new(brave) }
+monster_team = MONSTER_LIST.sample(monster_count).map { |monster| Monster.new(monster) }
 
 # バトル開始
-battle = Battle.new(battle_members)
+battle = Battle.new(brave_team + monster_team)
 
-p battle
+battle.show_members_hp

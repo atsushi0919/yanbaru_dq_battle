@@ -2,7 +2,7 @@
 
 class Battle
   MESSAGE_SPEED = 0.5
-  PARTITION = "*" + "=*" * 14
+  PARTITION = ["*" + "=*" * 14, "-" * 29]
 
   def initialize(battle_members)
     # バトルメンバー
@@ -18,27 +18,28 @@ class Battle
   # 1サイクル進める
   def forward_turn
     @battle_members.each do |attacker|
-      # アタッカーが戦闘不能なら順番を飛ばす
       next unless attacker.alive?
       target = select_target(attacker)
     end
   end
 
-  def
- # 全員のステータスを表示
-    def(show_members_hp)
-    puts PARTITION
-    (get_allies + get_enemies).each do |member|
-      puts "【#{member.name}】HP: #{member.hp}"
-    end
-    puts PARTITION
+  # 全員のステータスを表示
+  def show_members_hp
+    allies = get_team_member(ally = true)
+    enemies = get_team_member(ally = false)
+
+    puts PARTITION[0]
+    allies.each { |member| puts "【#{member.name}】HP: #{member.hp}" }
+    puts PARTITION[1] if @allies_count + @enemies_count > 2
+    enemies.each { |member| puts "【#{member.name}】HP: #{member.hp}" }
+    puts PARTITION[0]
   end
 
   private
 
-  # 敵軍チームからターゲットを選択する
+  # 攻撃ターゲットを選択する
   def select_target(attacker)
-    target_team = ""
+    get_team_member(!attacker.ally, only_alive = true).sample
   end
 
   # 生きているか？
@@ -48,7 +49,7 @@ class Battle
 
   # メンバーリストを返す
   # ally: 友軍or敵軍, only_alive: 全員or生存者
-  def get_member(ally, only_alive = false)
+  def get_team_member(ally, only_alive = false)
     if only_alive
       @battle_members.select { |member| member.ally == ally && member.alive? }
     else
