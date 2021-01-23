@@ -16,15 +16,29 @@ module Message
     if attacker.ally
       # 友軍の攻撃
       messages[-1] += damage > 0 ? "に #{damage} のダメージを与えた！" : "にダメージを与えられなかった！"
-      messages << "#{attacker.name} は #{target.name} をやっつけた！！" if target.hp == 0
+      messages << "#{attacker.name} は #{target.name} をやっつけた！" if target.hp == 0
     else
       # 敵軍の攻撃
       messages[-1] += damage > 0 ? "は #{damage} のダメージを受けた！" : "ひらりと身をかわした！"
-      messages << "\e[31m#{target.name} は #{attacker.name} に倒されてしまった！\e[0m" if target.hp == 0
+      messages << "\e[31m#{target.name} は #{attacker.name} に倒されてしまった…\e[0m" if target.hp == 0
     end
     messages.each do |message|
       puts message
       sleep MESSAGE_SPEED
+    end
+  end
+
+  def show_party_ending(params)
+    # 勝利
+    if params[:winner]
+      message = "#{params[:allies_leader]} "
+      message += "達" if params[:allies_count] > 1
+      message += "は戦いに勝った！！"
+      # 全滅
+    else
+      message = "\e[31m#{params[:allies_leader]} "
+      message += "達" if params[:allies_count] > 1
+      message += "は戦いに負けてしまった…\e[0m"
     end
   end
 end

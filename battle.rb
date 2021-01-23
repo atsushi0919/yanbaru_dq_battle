@@ -14,7 +14,7 @@ class Battle
     # 友軍情報: リーダー名, 人数
     @allies_leader = battle_members.find { |member| member.ally }.name
     @allies_count = battle_members.count { |member| member.ally }
-    # 敵軍情報: リーダー名, 人数
+    # 敵軍情報: リーダー名（不使用）, 人数
     @enemies_leader = battle_members.find { |member| !member.ally }.name
     @enemies_count = battle_members.count { |member| !member.ally }
   end
@@ -25,15 +25,28 @@ class Battle
     show_start_message(get_team_member(ally = false))
     @battle_members.each do |attacker|
       # 攻撃処理
-      next unless alive?(attacker)
+      next if !alive?(attacker)
       target = select_target(attacker)
       damage = attacker.attack(target.defense)
       target.hp = [target.hp - damage, 0].max
-      # メッセージ処理
+      # メッセージ表示
       show_damage(damage, attacker, target)
       # 戦闘終了判定
+      if get_team_member(target.ally, only_alive = true) == 0
+        show_members_hp
+        winner = !target.ally
+        if @allies_count == 1 && @enemies_count == 1
+          return
+        else
+          params = { winner: winner,
+                     allies_leader: @allies_leader,
+                     allies_count: @allies_count,
+                     enemies_count: @enemies_count }
+          show_party_ending(message_params)
+          return
+        end
+      end
     end
-    show_members_hp
   end
 
   # 全員のステータスを表示
@@ -70,26 +83,3 @@ class Battle
     end
   end
 end
-
-=begin
-def ending(winner_idx)
-  # 改行
-  puts
-  # 勇者の勝ち
-  if winner_idx == 0
-    puts "#{@characters[winner_idx].name} は #{@characters[(winner_idx + 1) % @member].name} をやっつけた！！"
-    # 勇者の負け
-  else
-    puts "\e[31m#{@characters[0].name} は倒されてしまった！\e[0m"
-  end
-  # 改行
-  puts
-end
-
-# メッセージ処理
-    messages = ["#{@name} の攻撃！", "#{target.name} に"]
-    messages[-1] += damage > 0 ? " #{damage} のダメージを与えた！" : "ダメージを与えられなかった！"
-    messages.each do |message|
-      puts message
-      sleep 0.5
-=end
