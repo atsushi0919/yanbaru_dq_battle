@@ -1,52 +1,118 @@
+# encoding: utf-8
+
+require "./message"
+
 class Battle
-  @@phase = 0
+  # メッセージ処理
+  include Message
 
-  def initialize(battle_table)
-    @characters = [battle_table[:player], battle_table[:monster]]
-    @member = @characters.size
+  PARTITION = ["*" + "=*" * 12, "-" * 25]
+
+  def initialize(battle_members)
+    # バトルメンバー
+    @battle_members = battle_members
+    # 味方情報: リーダー名, 人数
+    @allies_leader = battle_members.find { |member| member.ally }.name
+    @allies_count = battle_members.count { |member| member.ally }
+    # 敵情報: リーダー名（不使用）, 人数
+    @enemies_leader = battle_members.find { |member| !member.ally }.name
+    @enemies_count = battle_members.count { |member| !member.ally }
   end
 
+  # オートバトル
   def start
-    puts "#{@characters[-1].name} があらわれた！"
-    sleep 0.5
-
-    # 戦闘開始
+    # 開始メッセージ
+    show_start_message(get_team_member(ally = false))
+    # 戦闘ループ
     while true
-      attacker_idx = @@phase % @member
-      target_idx = (@@phase + 1) % @member
-      @characters[attacker_idx].attack(@characters[target_idx])
-
-      # 双方の攻撃が終わったとき、またはターゲットが倒れた場合HPを表示する
-      if @@phase % 2 == 1 or @characters[target_idx].hp <= 0
-        line = "*=*=*=*=*=*=*=*=*=*=*"
-        puts line
-        @characters.each do |character|
-          puts "【#{character.name}】HP: #{character.hp}"
-        end
-        puts line
-        sleep 0.5
-      end
-
-      # ターゲットがノックダウンならバトルを終了してループを抜ける
-      if @characters[target_idx].hp <= 0
-        ending(attacker_idx)
-        break
-      end
-      @@phase += 1
+      stop = forward_turn
+      return if stop
     end
   end
 
-  def ending(winner_idx)
-    # 改行
-    puts
-    # 勇者の勝ち
-    if winner_idx == 0
-      puts "#{@characters[winner_idx].name} は #{@characters[(winner_idx + 1) % @member].name} をやっつけた！！"
-      # 勇者の負け
-    else
-      puts "\e[31m#{@characters[0].name} は倒されてしまった！\e[0m"
+  # 1ターン進める
+  def forward_turn
+    @battle_members.each do |attacker|
+      # 攻撃処理
+      next unless alive?(attacker)
+      target = select_target(attacker)
+      damage = attacker.attack(target.defense)
+      target.hp = [target.hp - damage, 0].max
+      # メッセージ表示
+      show_damage(damage, attacker, target)
+      unless alive?(target)
+        show_members_hp if solo_battle?
+        show_knockdown(attacker, target)
+      end
+      # 戦闘終了判定
+      if get_team_member(target.ally, only_alive = true).empty?
+        winner = attacker.ally
+        if solo_battle?
+          # 1対1ならそのまま終了
+          return true
+        else
+          # 1対1でなければ最後にメッセージを表示する
+          show_members_hp
+          params = { winner: winner,
+                     allies_leader: @allies_leader,
+                     allies_count: @allies_count,
+                     enemies_count: @enemies_count }
+          show_party_ending(params)
+          return true
+        end
+      end
     end
-    # 改行
-    puts
+    show_members_hp
+    false
+  end
+
+  # 全員のステータスを表示
+  def show_members_hp
+    allies = get_team_member(ally = true)
+    enemies = get_team_member(ally = false)
+
+    puts PARTITION[0]
+    allies.each do |member|
+      status = "【#{member.name}】".ljust(9, "　") + "HP:" + "#{member.hp}".rjust(3, " ")
+      status = red_status(status) unless alive?(member)
+      puts status
+    end
+    puts PARTITION[1] if @allies_count + @enemies_count > 2
+    enemies.each do |member|
+      puts "【#{member.name}】".ljust(9, "　") + "HP:" + "#{member.hp}".rjust(3, " ")
+    end
+    puts PARTITION[0]
+  end
+
+  private
+
+  # 1vs1かを返す
+  def solo_battle?
+    @battle_members.size == 2
+  end
+
+  # 攻撃ターゲットを選択する
+  def select_target(attacker)
+    get_team_member(!attacker.ally, only_alive = true).sample
+  end
+
+  # 生きているかを返す
+  def alive?(member)
+    member.hp > 0 ? true : false
+  end
+
+  # ステータスを赤文字にする
+  def red_status(status)
+    "\e[31m" + status + "\e[0m"
+  end
+
+  # メンバーリストを返す
+  # ally: 友軍or敵軍, only_alive: 全員or生存者
+  def get_team_member(ally, only_alive = false)
+    if only_alive
+      @battle_members.select { |member| member.ally == ally && alive?(member) }
+    else
+      @battle_members.select { |member| member.ally == ally }
+    end
   end
 end
