@@ -33,22 +33,24 @@ module Message
       puts "#{attacker.name} は #{target.name} をやっつけた！"
     else
       # 味方が倒された
-      puts "\e[31m#{target.name} は #{attacker.name} に倒されてしまった…\e[0m"
+      puts red_string("#{target.name} は #{attacker.name} に倒されてしまった…")
     end
   end
 
   def show_party_ending(params)
+    message = "#{params[:allies_leader]}"
+    message += "達" if params[:allies_count] > 1
     if params[:winner]
-      # 勝利
-      message = "\n#{params[:allies_leader]}"
-      message += "達" if params[:allies_count] > 1
       message += "は戦いに勝った！！"
     else
-      # 全滅
-      message = "\n\e[31m#{params[:allies_leader]} "
-      message += "達" if params[:allies_count] > 1
-      message += "は戦いに負けてしまった…\e[0m"
+      message += "は戦いに負けてしまった…"
+      message = red_string(message)
     end
     puts message
+  end
+
+  # 文字列を赤文字にする
+  def red_string(string)
+    "\e[31m" + string + "\e[0m"
   end
 end
