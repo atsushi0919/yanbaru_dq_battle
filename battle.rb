@@ -21,7 +21,8 @@ class Battle
 
   # 1サイクル進める
   def forward_turn
-    show_members_hp
+    # 開始メッセージ
+    show_start_message(get_team_member(ally = false))
     @battle_members.each do |attacker|
       # 攻撃処理
       next unless alive?(attacker)
@@ -54,7 +55,7 @@ class Battle
     get_team_member(!attacker.ally, only_alive = true).sample
   end
 
-  # 生きているか？
+  # 生きているかを返す
   def alive?(member)
     member.hp > 0 ? true : false
   end
@@ -66,14 +67,6 @@ class Battle
       @battle_members.select { |member| member.ally == ally && alive?(member) }
     else
       @battle_members.select { |member| member.ally == ally }
-    end
-  end
-
-  # 開始メッセージを表示
-  def show_start_message
-    get_enemies.each do |enemy|
-      puts "#{enemy} があらわれた！"
-      sleep MESSAGE_SPEED
     end
   end
 end

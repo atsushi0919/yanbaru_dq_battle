@@ -3,6 +3,14 @@
 module Message
   MESSAGE_SPEED = 0.5
 
+  # 開始メッセージ
+  def show_start_message(enemies)
+    enemies.each do |enemy|
+      puts "#{enemy.name} があらわれた！"
+      sleep MESSAGE_SPEED
+    end
+  end
+
   def show_damage(damage, attacker, target)
     messages = ["#{attacker.name} の攻撃！", "#{target.name} "]
     if attacker.ally
