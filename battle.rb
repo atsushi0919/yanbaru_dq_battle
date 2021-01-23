@@ -1,7 +1,11 @@
 # encoding: utf-8
 
+require "./message"
+
 class Battle
-  MESSAGE_SPEED = 0.5
+  # メッセージ処理
+  include Message
+
   PARTITION = ["*" + "=*" * 14, "-" * 29]
 
   def initialize(battle_members)
@@ -17,10 +21,18 @@ class Battle
 
   # 1サイクル進める
   def forward_turn
+    show_members_hp
     @battle_members.each do |attacker|
-      next unless attacker.alive?
+      # 攻撃処理
+      next unless alive?(attacker)
       target = select_target(attacker)
+      damage = attacker.attack(target.defense)
+      target.hp = [target.hp - damage, 0].max
+      # メッセージ処理
+      show_damage(damage, attacker, target)
+      # 戦闘終了判定
     end
+    show_members_hp
   end
 
   # 全員のステータスを表示
@@ -51,7 +63,7 @@ class Battle
   # ally: 友軍or敵軍, only_alive: 全員or生存者
   def get_team_member(ally, only_alive = false)
     if only_alive
-      @battle_members.select { |member| member.ally == ally && member.alive? }
+      @battle_members.select { |member| member.ally == ally && alive?(member) }
     else
       @battle_members.select { |member| member.ally == ally }
     end

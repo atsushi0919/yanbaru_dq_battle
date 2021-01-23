@@ -25,4 +25,5 @@ monster_team = MONSTER_LIST.sample(monster_count).map { |monster| Monster.new(mo
 # バトル開始
 battle = Battle.new(brave_team + monster_team)
 
-battle.show_members_hp
+battle.forward_turn
+#battle.show_members_hp
