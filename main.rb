@@ -17,13 +17,14 @@ BRAVE_LIST = [{ name: "もょもと", hp: 230, offense: 170, defense: 180 },
               { name: "プリン", hp: 202, offense: 125, defense: 140 }]
 
 # 対戦メンバーを生成 (brave_teamから攻撃する)
-brave_count = 3
-monster_count = 2
+brave_count = 1
+monster_count = 1
 brave_team = BRAVE_LIST.sample(brave_count).map { |brave| Brave.new(brave) }
 monster_team = MONSTER_LIST.sample(monster_count).map { |monster| Monster.new(monster) }
 
+#brave_team = [Brave.new(BRAVE_LIST[0])]
+#monster_team = [Monster.new(MONSTER_LIST[2])]
+
 # バトル開始
 battle = Battle.new(brave_team + monster_team)
-
-battle.forward_turn
-#battle.show_members_hp
+battle.start_auto

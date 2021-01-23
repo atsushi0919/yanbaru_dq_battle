@@ -19,10 +19,19 @@ class Battle
     @enemies_count = battle_members.count { |member| !member.ally }
   end
 
-  # 1サイクル進める
-  def forward_turn
+  # オートバトル
+  def start_auto
     # 開始メッセージ
     show_start_message(get_team_member(ally = false))
+
+    while true
+      stop = forward_turn
+      return if stop
+    end
+  end
+
+  # 1サイクル進める
+  def forward_turn
     @battle_members.each do |attacker|
       # 攻撃処理
       next if !alive?(attacker)
@@ -32,21 +41,23 @@ class Battle
       # メッセージ表示
       show_damage(damage, attacker, target)
       # 戦闘終了判定
-      if get_team_member(target.ally, only_alive = true) == 0
-        show_members_hp
+      byebug
+      if get_team_member(target.ally, only_alive = true).empty?
         winner = !target.ally
         if @allies_count == 1 && @enemies_count == 1
-          return
+          return true
         else
           params = { winner: winner,
                      allies_leader: @allies_leader,
                      allies_count: @allies_count,
                      enemies_count: @enemies_count }
           show_party_ending(message_params)
-          return
+          return true
         end
       end
     end
+    show_members_hp
+    false
   end
 
   # 全員のステータスを表示
