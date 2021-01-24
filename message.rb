@@ -16,10 +16,10 @@ module Message
     messages = ["#{attacker.name} の攻撃！", "#{target.name} "]
     if attacker.ally
       # 味方の攻撃
-      messages[-1] += damage > 0 ? "に #{damage} のダメージを与えた！" : "にダメージを与えられなかった！"
+      messages[-1] << damage > 0 ? "に #{damage} のダメージを与えた！" : "にダメージを与えられなかった！"
     else
       # 敵の攻撃
-      messages[-1] += damage > 0 ? "は #{damage} のダメージを受けた！" : "はひらりと身をかわした！"
+      messages[-1] << damage > 0 ? "は #{damage} のダメージを受けた！" : "はひらりと身をかわした！"
     end
     messages.each do |message|
       puts message
@@ -39,11 +39,11 @@ module Message
 
   def show_party_ending(params)
     message = "#{params[:allies_leader]}"
-    message += "達" if params[:allies_count] > 1
+    message << "達" if params[:allies_count] > 1
     if params[:winner]
-      message += "は戦いに勝った！！"
+      message << "は戦いに勝った！！"
     else
-      message += "は戦いに負けてしまった…"
+      message << "は戦いに負けてしまった…"
       message = red_string(message)
     end
     puts message
@@ -51,6 +51,6 @@ module Message
 
   # 文字列を赤文字にする
   def red_string(string)
-    "\e[31m" + string + "\e[0m"
+    "\e[31m" << string << "\e[0m"
   end
 end

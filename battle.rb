@@ -3,10 +3,10 @@
 require "./message"
 
 class Battle
-  # メッセージ処理
+  # メッセージ処理読み込み
   include Message
 
-  PARTITION = ["*" + "=*" * 12, "-" * 25]
+  PARTITION = ["*" << "=*" * 12, "-" * 25]
 
   def initialize(battle_members)
     # バトルメンバー
@@ -111,6 +111,6 @@ class Battle
 
   # ステータス情報の表示を整える
   def trim_status_info(character)
-    "【#{character.name}】".ljust(9, "　") + "HP:" + "#{character.hp}".rjust(3, " ")
+    "【#{character.name}】".ljust(9, "　") << "HP:" << "#{character.hp}".rjust(3, " ")
   end
 end
