@@ -3,10 +3,10 @@
 require "./message"
 
 class Battle
-  # メッセージ処理
+  # メッセージ処理読み込み
   include Message
 
-  PARTITION = ["*" + "=*" * 12, "-" * 25]
+  PARTITION = ["*" << "=*" * 12, "-" * 25]
 
   def initialize(battle_members)
     # バトルメンバー
@@ -31,19 +31,15 @@ class Battle
       break if stop
     end
 
-    # エンディングメッセージ
-    if solo_battle?
-      # 1対1ならそのまま終了
-      return
-    else
-      # 1対1でなければ最後にメッセージを表示する
-      show_members_hp
-      params = { winner: winner,
-                 allies_leader: @allies_leader,
-                 allies_count: @allies_count,
-                 enemies_count: @enemies_count }
-      show_party_ending(params)
-    end
+    # 1対1ならそのまま終了
+    return if solo_battle?
+    # 1対1でなければ最後にメッセージを表示する
+    show_members_hp
+    params = { winner: winner,
+               allies_leader: @allies_leader,
+               allies_count: @allies_count,
+               enemies_count: @enemies_count }
+    show_party_ending(params)
   end
 
   # 1ターン進める
@@ -115,6 +111,6 @@ class Battle
 
   # ステータス情報の表示を整える
   def trim_status_info(character)
-    "【#{character.name}】".ljust(9, "　") + "HP:" + "#{character.hp}".rjust(3, " ")
+    "【#{character.name}】".ljust(9, "　") << "HP:" << "#{character.hp}".rjust(3, " ")
   end
 end
