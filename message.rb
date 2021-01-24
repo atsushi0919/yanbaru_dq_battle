@@ -16,10 +16,10 @@ module Message
     messages = ["#{attacker.name} の攻撃！", "#{target.name} "]
     if attacker.ally
       # 味方の攻撃
-      messages[-1] << damage > 0 ? "に #{damage} のダメージを与えた！" : "にダメージを与えられなかった！"
+      messages[-1] <<= damage > 0 ? "に #{damage} のダメージを与えた！" : "にダメージを与えられなかった！"
     else
       # 敵の攻撃
-      messages[-1] << damage > 0 ? "は #{damage} のダメージを受けた！" : "はひらりと身をかわした！"
+      messages[-1] <<= damage > 0 ? "は #{damage} のダメージを受けた！" : "はひらりと身をかわした！"
     end
     messages.each do |message|
       puts message
