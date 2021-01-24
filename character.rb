@@ -9,7 +9,6 @@ class Character
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
-    @ally = true
   end
 
   def attack(target_defense)
