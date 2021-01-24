@@ -31,19 +31,15 @@ class Battle
       break if stop
     end
 
-    # エンディングメッセージ
-    if solo_battle?
-      # 1対1ならそのまま終了
-      return
-    else
-      # 1対1でなければ最後にメッセージを表示する
-      show_members_hp
-      params = { winner: winner,
-                 allies_leader: @allies_leader,
-                 allies_count: @allies_count,
-                 enemies_count: @enemies_count }
-      show_party_ending(params)
-    end
+    # 1対1ならそのまま終了
+    return if solo_battle?
+    # 1対1でなければ最後にメッセージを表示する
+    show_members_hp
+    params = { winner: winner,
+               allies_leader: @allies_leader,
+               allies_count: @allies_count,
+               enemies_count: @enemies_count }
+    show_party_ending(params)
   end
 
   # 1ターン進める
